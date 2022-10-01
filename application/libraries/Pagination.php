@@ -26,7 +26,7 @@ class Pagination {
 		$this->totalPage = ceil($this->totalCount/$this->pagePerList);		// 전체 페이지 수
 		$this->totalBlcok = ceil($this->totalPage/$this->blockPerPage);		// 전체 블럭 수
 		$block = ceil($this->page/$this->totalBlcok);						// 현재 블럭
-		$this->startPage = ($block - 1) * $this->blockPerPage + 1;				// 블럭당 시작 페이지
+		$this->startPage = ($block - 1) * $this->blockPerPage + 1;			// 블럭당 시작 페이지
 		if($this->startPage <= 0) {
 			$this->startPage = 1;
 		}
@@ -35,10 +35,10 @@ class Pagination {
 			$this->endPage = $this->totalPage;
 		}
 
-		$this->prevBlock = $block - 1;									// 이전 블럭
+		$this->prevBlock = $block - 1;										// 이전 블럭
 		$this->prevBlockPage = $this->prevBlock * $this->blockPerPage;		// 이전 블럭 페이지
 
-		$this->nextBlock = $block + 1;										// 다음 블럭
+		$this->nextBlock = $block + 1;												// 다음 블럭
 		$this->nextBlockPage = ($this->nextBlock - 1) * $this->blockPerPage + 1;	// 다음 블럭 페이지 
 	}
 

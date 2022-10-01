@@ -9,7 +9,7 @@ class Application {
 		$url = '';
 		if(isset($_GET['url'])) {
 			$url = rtrim($_GET['url'], '/');
-			$url = filter_var($url, FILTER_VALIDATE_URL);
+			$url = filter_var($url, FILTER_SANITIZE_URL);
 		}
 
 		$params = explode('/', $url);
