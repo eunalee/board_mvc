@@ -25,5 +25,3 @@
 		</ul>
 	</nav>
 	<a class="btn btn-primary" href="/board_mvc/board/writeListForm" role="button">글쓰기</a>
-	<footer></footer>
-</body>
