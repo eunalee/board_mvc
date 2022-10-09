@@ -1,12 +1,15 @@
 window.onload = () => {
 	// form 요소 이벤트
 	const form = document.getElementById('signupForm');
-	form.addEventListener('focusout', (event) => {
-		formCheck(event.target);
-	});
-	form.addEventListener('keyup', (event) => {
-		formCheck(event.target);
-	});
+	if(form) {
+		form.addEventListener('focusout', (event) => {
+			formCheck(event.target);
+		});
+
+		form.addEventListener('keyup', (event) => {
+			formCheck(event.target);
+		});
+	}
 }
 
 /**
