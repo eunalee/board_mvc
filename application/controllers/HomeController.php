@@ -25,13 +25,12 @@ class HomeController extends Controller {
 		$topData['title'] = '게시판 메인';
 
 		// params
-		$page = isset($_GET['page']) && $_GET['page'] > 0 ? $_GET['page'] : 1;
-
 		$data = array();
+		$data['page'] = isset($_GET['page']) && $_GET['page'] > 0 ? $_GET['page'] : 1;
 
 		// 게시글 전체 카운트
 		$totalCount = $this->model->getBoardListCount();
-		$this->pagination = new \application\libraries\Pagination($totalCount, $page);
+		$this->pagination = new \application\libraries\Pagination($totalCount, $data['page']);
 		$offset = $this->pagination->getOffset();
 
 		// 페이징
@@ -41,7 +40,9 @@ class HomeController extends Controller {
 		}
 
 		// 게시글 조회
-		$boardList = $this->model->getBoardList($offset , 5);
+		$params['offset'] = $offset;
+		$params['limit'] = 5;
+		$boardList = $this->model->getBoardList($params);
 		if(sizeof($boardList) > 0) {
 			$data['boardList'] = $boardList; 
 		}

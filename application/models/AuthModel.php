@@ -10,37 +10,45 @@ class AuthModel extends Model {
 	/**
 	 * 사용자 정보 조회
 	 */
-	public function getMemberInfo($id) {
-		$sql = 'SELECT nMemberSeq, sName, sId, sPassword FROM tMember ';
+	public function getMemberInfo($params) {
+		try {
+			$sql = 'SELECT nMemberSeq, sName, sId, sPassword FROM tMember ';
 
-		if($id != '') {
-			$sql .= "WHERE sId='$id'";	
+			if($params['id'] != '') {
+				$sql .= "WHERE sId='" . $params['id'] . "'";
+			}
+
+			$stmt = $this->pdo->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			return $result;
+		} catch(\PDOException $e) {
+			die($e->getMessage());
 		}
-
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute();
-		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		return $result;
 	}
 
 	/**
 	 * 사용자 정보 입력
 	 */
 	public function addMemberInfo($params) {
-		$sql = "INSERT INTO tMember(sName, sId, sPassword) VALUES (:name, :id, :password)";
+		try {
+			$sql = "INSERT INTO tMember(sName, sId, sPassword) VALUES (:name, :id, :password)";
 
-		$stmt = $this->pdo->prepare($sql);
+			$stmt = $this->pdo->prepare($sql);
 
-		// 쿼리 바인딩
-		$stmt->bindParam(':name', $params['name']);
-		$stmt->bindParam(':id', $params['id']);
-		$stmt->bindParam(':password', $params['password']);
+			// 쿼리 바인딩
+			$stmt->bindParam(':name', $params['name']);
+			$stmt->bindParam(':id', $params['id']);
+			$stmt->bindParam(':password', $params['password']);
 
-		$stmt->execute();
-		$result = $stmt->rowCount();
+			$stmt->execute();
+			$result = $stmt->rowCount();
 
-		return $result;
+			return $result;
+		} catch(\PDOException $e) {
+			die($e->getMessage());
+		}
 	}
 }
 ?>

@@ -54,7 +54,7 @@ class AuthController extends Controller {
 		$data = json_decode($rawData, true);			// JSON 문자열 -> 배열로 변환
 		$params['id'] = isset($data['id']) && $data['id'] != '' ? $data['id'] : '';
 
-		$memberInfo = $this->model->getMemberInfo($params['id']);
+		$memberInfo = $this->model->getMemberInfo($params);
 		if(sizeof($memberInfo) > 0) {
 			$result['status'] = 200;
 			$result['desc'] = '사용중이거나 탈퇴한 아이디입니다.';
@@ -84,26 +84,26 @@ class AuthController extends Controller {
 		// params
 		$params['id'] = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : '';
 		$params['password'] = isset($_POST['password']) && $_POST['password'] != '' ? $_POST['password'] : '';
-		$params['url'] = isset($_POST['loginUrl']) && $_POST['loginUrl'] != '' ? $_POST['loginUrl'] : '';
+		$url = isset($_POST['loginUrl']) && $_POST['loginUrl'] != '' ? $_POST['loginUrl'] : '';
 
 		// 사용자 정보 조회
 		$isLogin = false;
-		$memberInfo = $this->model->getMemberInfo($params['id']);
+		$memberInfo = $this->model->getMemberInfo($params);
 		if(sizeof($memberInfo) > 0) {
-			$isLogin = true;
-
 			// 비밀번호 검증
 			if(password_verify($params['password'], $memberInfo[0]['sPassword'])) {
+				$isLogin = true;
+
 				// 세션 생성
 				$_SESSION['memberSeq'] = $memberInfo[0]['nMemberSeq'];
 				$_SESSION['name'] = $memberInfo[0]['sName'];
 
-				echo '<script>location.href="' . $params['url'] . '";</script>';
+				echo '<script>location.href="' . $url . '";</script>';
 			}
 		}
 
 		if(!$isLogin) {
-			echo '<script>alert("아이디와 비밀번호를 확인해주세요.");</script>';
+			echo '<script>alert("아이디와 비밀번호를 확인해주세요."); history.back();</script>';
 		}
 	}
 
