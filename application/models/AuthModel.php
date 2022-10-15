@@ -12,13 +12,24 @@ class AuthModel extends Model {
 	 */
 	public function getMemberInfo($params) {
 		try {
-			$sql = 'SELECT nMemberSeq, sName, sId, sPassword FROM tMember ';
+			$sql = 'SELECT 
+						nMemberSeq, 
+						sName, 
+						sId, 
+						sPassword 
+					FROM tMember';
 
 			if($params['id'] != '') {
-				$sql .= "WHERE sId='" . $params['id'] . "'";
+				$sql .= ' WHERE sId=:id';
 			}
 
 			$stmt = $this->pdo->prepare($sql);
+
+			// 쿼리 바인딩
+			if($params['id'] != '') {
+				$stmt->bindParam(':id', $params['id']);
+			}
+
 			$stmt->execute();
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -33,7 +44,16 @@ class AuthModel extends Model {
 	 */
 	public function addMemberInfo($params) {
 		try {
-			$sql = "INSERT INTO tMember(sName, sId, sPassword) VALUES (:name, :id, :password)";
+			$sql = "INSERT INTO tMember(
+						sName, 
+						sId, 
+						sPassword
+					) 
+					VALUES (
+						:name, 
+						:id, 
+						:password
+					)";
 
 			$stmt = $this->pdo->prepare($sql);
 

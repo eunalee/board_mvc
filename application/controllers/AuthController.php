@@ -32,9 +32,9 @@ class AuthController extends Controller {
 	 * 회원가입
 	 */
 	public function signup() {
-		$params['id'] = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : '';
-		$params['password'] = isset($_POST['password']) && $_POST['password'] != '' ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
-		$params['name'] = isset($_POST['name']) && $_POST['name'] != '' ? $_POST['name'] : '';
+		$params['id'] = (isset($_POST['id']) && $_POST['id'] != '') ? $_POST['id'] : '';
+		$params['password'] = (isset($_POST['password']) && $_POST['password'] != '') ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
+		$params['name'] = (isset($_POST['name']) && $_POST['name'] != '') ? $_POST['name'] : '';
 
 		$result = $this->model->addMemberInfo($params);
 		$message = ($result > 0) ? '회원가입 성공' : '회원가입 실패';
@@ -47,7 +47,7 @@ class AuthController extends Controller {
 	public function idCheck() {
 		$result = array(
 				'status' => 201,
-				'desc' => ''
+				'message' => ''
 		);
 
 		$rawData = file_get_contents('php://input');	// 파싱 전, POST 데이터
@@ -57,7 +57,7 @@ class AuthController extends Controller {
 		$memberInfo = $this->model->getMemberInfo($params);
 		if(sizeof($memberInfo) > 0) {
 			$result['status'] = 200;
-			$result['desc'] = '사용중이거나 탈퇴한 아이디입니다.';
+			$result['message'] = '사용중이거나 탈퇴한 아이디입니다.';
 		}
 
 		header('Content-Type: application/json; charset=utf-8');
@@ -72,7 +72,7 @@ class AuthController extends Controller {
 		$topData['title'] = '게시판 로그인';
 
 		$data = array();
-		$data['loginUrl'] = isset($_GET['loginUrl']) && $_GET['loginUrl'] != '' ? $_GET['loginUrl'] : '';
+		$data['loginUrl'] = (isset($_GET['loginUrl']) && $_GET['loginUrl'] != '') ? $_GET['loginUrl'] : '';
 
 		$this->layout->renderWithFrame('auth/loginForm', $data, $topData);
 	}
@@ -82,9 +82,9 @@ class AuthController extends Controller {
 	 */
 	public function login() {
 		// params
-		$params['id'] = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : '';
-		$params['password'] = isset($_POST['password']) && $_POST['password'] != '' ? $_POST['password'] : '';
-		$url = isset($_POST['loginUrl']) && $_POST['loginUrl'] != '' ? $_POST['loginUrl'] : '';
+		$params['id'] = (isset($_POST['id']) && $_POST['id'] != '') ? $_POST['id'] : '';
+		$params['password'] = (isset($_POST['password']) && $_POST['password'] != '') ? $_POST['password'] : '';
+		$url = (isset($_POST['loginUrl']) && $_POST['loginUrl'] != '') ? $_POST['loginUrl'] : '';
 
 		// 사용자 정보 조회
 		$isLogin = false;

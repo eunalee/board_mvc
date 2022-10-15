@@ -12,9 +12,7 @@ window.onload = () => {
 	}
 }
 
-/**
- * 폼 검증
- */
+// 회원가입 입력폼 검증
 const formCheck = (obj) => {
 	// input 클래스 모두 제거
 	obj.classList.remove('is-valid');
@@ -56,9 +54,7 @@ const formCheck = (obj) => {
 	button.disabled = isActive ? false : true;
 };
 
-/**
- * 입력값 유효성 검사
- */
+// 입력값 유효성 검사
 const formValidate = (id, value) => {
 	let message = '';
 
@@ -147,9 +143,7 @@ const formValidate = (id, value) => {
 	return message;
 };
 
-/**
- * 아이디 중복 체크
- */
+// 아이디 중복 체크
 const idCheck = (value) => {
 	// XMLHttpRequest 객체 생성
 	const xhr = new XMLHttpRequest();
@@ -168,9 +162,9 @@ const idCheck = (value) => {
 		if(xhr.status == 200) {
 			const response = JSON.parse(xhr.response);
 			const element = document.getElementById('id');
-			if(response.status === 200 && response.desc !== '') {
+			if(response.status === 200 && response.message !== '') {
 				element.classList.add('is-invalid');
-				element.nextElementSibling.innerHTML = response.desc;
+				element.nextElementSibling.innerHTML = response.message;
 			}
 			else {
 				element.classList.add('is-valid');
