@@ -8,7 +8,7 @@
 		</a>
 		<span class="badge bg-primary rounded-pill"><?php echo $board['nHit']; ?></span>
 	</li>
-	<?php endforeach;; ?>
+	<?php endforeach; ?>
 </ul>
 <?php else : ?>
 <ul class="list-group">
@@ -24,4 +24,4 @@
 		<?php echo $data['pagination']; ?>
 	</ul>
 </nav>
-<a class="btn btn-primary" href="/board_mvc/board/writeListForm" role="button">글쓰기</a>
+<a class="btn btn-primary" href="/board_mvc/board/writeListForm?mode=insert" role="button">글쓰기</a>
