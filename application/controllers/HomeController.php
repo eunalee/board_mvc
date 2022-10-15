@@ -26,12 +26,11 @@ class HomeController extends Controller {
 
 		// params
 		$data = array();
-		$data['page'] = isset($_GET['page']) && $_GET['page'] > 0 ? $_GET['page'] : 1;
+		$data['page'] = (isset($_GET['page']) && $_GET['page'] > 0) ? $_GET['page'] : 1;
 
 		// 게시글 전체 카운트
 		$totalCount = $this->model->getBoardListCount();
 		$this->pagination = new \application\libraries\Pagination($totalCount, $data['page']);
-		$offset = $this->pagination->getOffset();
 
 		// 페이징
 		$pagination = $this->pagination->getPagingHtml('/board_mvc/home/index');
@@ -40,7 +39,7 @@ class HomeController extends Controller {
 		}
 
 		// 게시글 조회
-		$params['offset'] = $offset;
+		$params['offset'] = ($data['page'] - 1) * 5;
 		$params['limit'] = 5;
 		$boardList = $this->model->getBoardList($params);
 		if(sizeof($boardList) > 0) {

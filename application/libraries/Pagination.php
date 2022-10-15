@@ -42,10 +42,6 @@ class Pagination {
 		$this->nextBlockPage = ($this->nextBlock - 1) * $this->blockPerPage + 1;	// 다음 블럭 페이지 
 	}
 
-	public function getOffset() {
-		return ($this->page - 1) * 5;
-	}
-
 	public function getPagingHtml($url) {
 		if($this->prevBlock > 0) {
 			$this->html .= '<li class="page-item"><a class="page-link" href="' . $url . '?page=' . $this->prevBlockPage . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
