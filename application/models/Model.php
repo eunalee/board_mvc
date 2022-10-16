@@ -1,5 +1,6 @@
 <?php
 namespace application\models;
+
 use \PDO;
 
 class Model {

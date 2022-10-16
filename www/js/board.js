@@ -98,6 +98,8 @@ const boardFormCheck = () => {
 		result.message = '내용을 입력해 주세요.';
 		return result;
 	}
+
+	return result;
 };
 
 // 댓글 입력폼 검증

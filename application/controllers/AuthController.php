@@ -1,6 +1,10 @@
 <?php
 namespace application\controllers;
 
+use application\libraries\Layout;
+use application\models\AuthModel;
+use application\dto\AuthDTO;
+
 /**
  * 인증 관련
  * @author eunalee
@@ -9,9 +13,9 @@ class AuthController extends Controller {
 	private $model;
 	private $layout;
 
-	function __construct($contoller, $method) {
-		$this->model = new \application\models\AuthModel('dbMember');
-		$this->layout = new \application\libraries\Layout();
+	public function __construct($contoller, $method) {
+		$this->model = new AuthModel('dbMember');
+		$this->layout = new Layout();
 
 		parent::__construct($contoller, $method);
 	}
@@ -32,12 +36,18 @@ class AuthController extends Controller {
 	 * 회원가입
 	 */
 	public function signup() {
-		$params['id'] = (isset($_POST['id']) && $_POST['id'] != '') ? $_POST['id'] : '';
-		$params['password'] = (isset($_POST['password']) && $_POST['password'] != '') ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
-		$params['name'] = (isset($_POST['name']) && $_POST['name'] != '') ? $_POST['name'] : '';
+		$data = array();
+		$data['id'] = (isset($_POST['id']) && $_POST['id'] != '') ? $_POST['id'] : '';
+		$data['password'] = (isset($_POST['password']) && $_POST['password'] != '') ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
+		$data['name'] = (isset($_POST['name']) && $_POST['name'] != '') ? $_POST['name'] : '';
 
-		$result = $this->model->addMemberInfo($params);
-		$message = ($result > 0) ? '회원가입 성공' : '회원가입 실패';
+		$authDto = new AuthDTO();
+		$authDto->setId($data['id']);
+		$authDto->setPassword($data['password']);
+		$authDto->setName($data['name']);
+		$result = $this->model->insertMemberInfo($authDto);
+
+		$message = ($result) ? '회원가입 성공' : '회원가입 실패';
 		echo '<script>alert("' . $message . '"); location.href="/board_mvc";</script>';
 	}
 
@@ -54,7 +64,10 @@ class AuthController extends Controller {
 		$data = json_decode($rawData, true);			// JSON 문자열 -> 배열로 변환
 		$params['id'] = isset($data['id']) && $data['id'] != '' ? $data['id'] : '';
 
-		$memberInfo = $this->model->getMemberInfo($params);
+		$authDto = new AuthDTO();
+		$authDto->setId($params['id']);
+		$memberInfo = $this->model->selectMemberInfo($authDto);
+
 		if(sizeof($memberInfo) > 0) {
 			$result['status'] = 200;
 			$result['message'] = '사용중이거나 탈퇴한 아이디입니다.';
@@ -81,17 +94,22 @@ class AuthController extends Controller {
 	 * 로그인
 	 */
 	public function login() {
-		// params
-		$params['id'] = (isset($_POST['id']) && $_POST['id'] != '') ? $_POST['id'] : '';
-		$params['password'] = (isset($_POST['password']) && $_POST['password'] != '') ? $_POST['password'] : '';
+		$data = array();
+		$data['id'] = (isset($_POST['id']) && $_POST['id'] != '') ? $_POST['id'] : '';
+		$data['password'] = (isset($_POST['password']) && $_POST['password'] != '') ? $_POST['password'] : '';
 		$url = (isset($_POST['loginUrl']) && $_POST['loginUrl'] != '') ? $_POST['loginUrl'] : '';
 
 		// 사용자 정보 조회
 		$isLogin = false;
-		$memberInfo = $this->model->getMemberInfo($params);
+
+		$authDto = new AuthDTO();
+		$authDto->setId($data['id']);
+		$authDto->setPassword($data['password']);
+		$memberInfo = $this->model->selectMemberInfo($authDto);
+
 		if(sizeof($memberInfo) > 0) {
 			// 비밀번호 검증
-			if(password_verify($params['password'], $memberInfo[0]['sPassword'])) {
+			if(password_verify($data['password'], $memberInfo[0]['sPassword'])) {
 				$isLogin = true;
 
 				// 세션 생성

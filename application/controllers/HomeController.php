@@ -1,6 +1,11 @@
 <?php
 namespace application\controllers;
 
+use application\libraries\Layout;
+use application\libraries\Pagination;
+use application\models\BoardModel;
+use application\dto\BoardDTO;
+
 /**
  * 메인
  * @author eunalee
@@ -10,9 +15,9 @@ class HomeController extends Controller {
 	private $layout;
 	private $pagination;
 
-	function __construct($controller, $method) {
-		$this->model = new \application\models\BoardModel('dbBoard');
-		$this->layout = new \application\libraries\Layout();
+	public function __construct($controller, $method) {
+		$this->model = new BoardModel('dbBoard');
+		$this->layout = new Layout();
 
 		parent::__construct($controller, $method);
 	}
@@ -29,8 +34,8 @@ class HomeController extends Controller {
 		$data['page'] = (isset($_GET['page']) && $_GET['page'] > 0) ? $_GET['page'] : 1;
 
 		// 게시글 전체 카운트
-		$totalCount = $this->model->getBoardListCount();
-		$this->pagination = new \application\libraries\Pagination($totalCount, $data['page']);
+		$totalCount = $this->model->selectBoardListCount();
+		$this->pagination = new Pagination($totalCount, $data['page']);
 
 		// 페이징
 		$pagination = $this->pagination->getPagingHtml('/board_mvc/home/index');
@@ -39,9 +44,10 @@ class HomeController extends Controller {
 		}
 
 		// 게시글 조회
-		$params['offset'] = ($data['page'] - 1) * 5;
-		$params['limit'] = 5;
-		$boardList = $this->model->getBoardList($params);
+		$boardDTO = new BoardDTO();
+		$boardDTO->setLimit(5);
+		$boardDTO->setOffset(($data['page'] - 1) * 5);
+		$boardList = $this->model->selectBoardList($boardDTO);
 		if(sizeof($boardList) > 0) {
 			$data['boardList'] = $boardList; 
 		}
